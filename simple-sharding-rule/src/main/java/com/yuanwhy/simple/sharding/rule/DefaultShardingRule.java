@@ -12,7 +12,7 @@ public class DefaultShardingRule implements ShardingRule{
 
         Integer intField = (Integer) fieldForDb;
 
-        return SEPARATOR + intField % 2;
+        return SEPARATOR + intField % 2; // TODO: 17/3/29 动态获取分库个数
     }
 
     @Override
