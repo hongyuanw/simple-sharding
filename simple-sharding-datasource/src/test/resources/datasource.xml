@@ -2,11 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans">
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="shardingRule" class="com.yuanwhy.simple.sharding.rule.DefaultShardingRule"/>
 
     <bean id="dataSource" class="com.yuanwhy.simple.sharding.datasource.LogicDataSource">
         <property name="logicDatabase" value="passport"/>
+        <property name="shardingRule" ref="shardingRule"/>
         <property name="physicalDataSourceMap">
             <map>
                 <entry key="passport_0" value-ref="physicalDataSource0"/>
@@ -14,6 +17,7 @@
             </map>
         </property>
     </bean>
+
 
     <bean id="physicalDataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>

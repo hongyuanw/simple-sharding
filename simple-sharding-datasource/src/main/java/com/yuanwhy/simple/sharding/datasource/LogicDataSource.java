@@ -1,5 +1,7 @@
 package com.yuanwhy.simple.sharding.datasource;
 
+import com.yuanwhy.simple.sharding.rule.ShardingRule;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -17,6 +19,8 @@ public class LogicDataSource implements DataSource {
 
     private Map<String, DataSource> physicalDataSourceMap;
 
+    private ShardingRule shardingRule;
+
     public String getLogicDatabase() {
         return logicDatabase;
     }
@@ -33,9 +37,20 @@ public class LogicDataSource implements DataSource {
         this.physicalDataSourceMap = physicalDataSourceMap;
     }
 
+    public ShardingRule getShardingRule() {
+        return shardingRule;
+    }
+
+    public void setShardingRule(ShardingRule shardingRule) {
+        this.shardingRule = shardingRule;
+    }
+
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+
+        Connection connection = new LogicConnection(this);
+
+        return connection;
     }
 
     @Override
