@@ -5,25 +5,25 @@ package com.yuanwhy.simple.sharding.rule;
  */
 public abstract class AbstractShardingRule implements ShardingRule {
 
-    private String fieldForDbName;
+    private String fieldNameForDb;
 
-    private String fieldForTableName;
+    private String fieldNameForTable;
 
 
     public String getFieldNameForDb() {
-        return fieldForDbName;
+        return fieldNameForDb;
     }
 
-    public void setFieldForDbName(String fieldForDbName) {
-        this.fieldForDbName = fieldForDbName;
+    public void setFieldNameForDb(String fieldForDbName) {
+        this.fieldNameForDb = fieldForDbName;
     }
 
     public String getFieldNameForTable() {
-        return fieldForTableName;
+        return fieldNameForTable;
     }
 
-    public void setFieldForTableName(String fieldForTableName) {
-        this.fieldForTableName = fieldForTableName;
+    public void setFieldNameForTable(String fieldForTableName) {
+        this.fieldNameForTable = fieldForTableName;
     }
 
 }
