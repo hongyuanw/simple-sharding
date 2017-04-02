@@ -111,25 +111,24 @@ public class LogicStatement implements Statement {
         List<TableStat.Condition> conditions = visitor.getConditions();
 
 
+        LogicDataSource logicDataSource = logicConnection.getLogicDataSource();
+        Object fieldValueForDb = 0, fieldValueForTable = 0;
 
-        Object fieldForDb = 0, fieldForTable = 0;
-
-        // TODO: 17/3/28 动态获取分库分表字段名
         for (TableStat.Condition condition : conditions) {
-            if (condition.getColumn().getName().equals("role")) {
-                fieldForDb = condition.getValues().get(0);
+            if (condition.getColumn().getName().equals(logicDataSource.getShardingRule().getFieldNameForDb())) {
+                fieldValueForDb = condition.getValues().get(0);
             }
 
-            if (condition.getColumn().getName().equals("id")) {
-                fieldForTable = condition.getValues().get(0);
+            if (condition.getColumn().getName().equals(logicDataSource.getShardingRule().getFieldNameForTable())) {
+                fieldValueForTable = condition.getValues().get(0);
             }
         }
 
-        LogicDataSource logicDataSource = logicConnection.getLogicDataSource();
 
 
-        String physicalDbName = logicDataSource.getLogicDatabase() + logicDataSource.getShardingRule().getDbSuffix(fieldForDb);
-        String physicalTableName = visitor.getCurrentTable() + logicDataSource.getShardingRule().getTableSuffix(fieldForTable);
+
+        String physicalDbName = logicDataSource.getLogicDatabase() + logicDataSource.getShardingRule().getDbSuffix(fieldValueForDb);
+        String physicalTableName = visitor.getCurrentTable() + logicDataSource.getShardingRule().getTableSuffix(fieldValueForTable);
 
         DataSource physicalDataSource = logicDataSource.getPhysicalDataSourceMap().get(physicalDbName);
 

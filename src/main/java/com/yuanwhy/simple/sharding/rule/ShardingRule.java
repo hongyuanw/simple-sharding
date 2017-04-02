@@ -5,8 +5,12 @@ package com.yuanwhy.simple.sharding.rule;
  */
 public interface ShardingRule {
 
-    String getDbSuffix(Object fieldForDb);
+    String getFieldNameForDb();
 
-    String getTableSuffix(Object fieldForTable);
+    String getFieldNameForTable();
+
+    String getDbSuffix(Object fieldValueForDb);
+
+    String getTableSuffix(Object fieldValueForTable);
 
 }

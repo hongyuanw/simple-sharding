@@ -6,6 +6,8 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="shardingRule" class="com.yuanwhy.simple.sharding.rule.HashShardingRule">
+        <property name="fieldForDbName" value="role"/>
+        <property name="fieldForTableName" value="id"/>
         <property name="dbCount" value="2"/>
         <property name="tableCount" value="2"/>
     </bean>

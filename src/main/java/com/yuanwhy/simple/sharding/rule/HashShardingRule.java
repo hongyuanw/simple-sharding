@@ -3,7 +3,7 @@ package com.yuanwhy.simple.sharding.rule;
 /**
  * Created by yuanwhy on 17/3/28.
  */
-public class HashShardingRule implements ShardingRule{
+public class HashShardingRule extends AbstractShardingRule{
 
     public static String SEPARATOR = "_";
 
@@ -36,15 +36,15 @@ public class HashShardingRule implements ShardingRule{
     }
 
     @Override
-    public String getDbSuffix(Object fieldForDb) {
+    public String getDbSuffix(Object fieldValueForDb) {
 
-        return SEPARATOR + hash(fieldForDb.hashCode(), dbCount);
+        return SEPARATOR + hash(fieldValueForDb.hashCode(), dbCount);
 
     }
     @Override
-    public String getTableSuffix(Object fieldForTable) {
+    public String getTableSuffix(Object fieldForTableValue) {
 
-        return SEPARATOR + hash(fieldForTable.hashCode(), tableCount);
+        return SEPARATOR + hash(fieldForTableValue.hashCode(), tableCount);
 
     }
 
