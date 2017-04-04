@@ -1,13 +1,19 @@
 package com.yuanwhy.simple.sharding.datasource;
 
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.*;
+import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.clause.MySqlSelectIntoStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
 import com.alibaba.druid.stat.TableStat;
 import com.alibaba.druid.util.JdbcConstants;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -103,47 +109,81 @@ public class LogicStatement implements Statement {
 
         List<SQLStatement> sqlStatements = SQLUtils.parseStatements(sql, JdbcConstants.MYSQL);
 
-        SQLStatement sqlStatement = sqlStatements.get(0);
-
+        SQLStatement currentSqlStatement = sqlStatements.get(0);
         MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
-        sqlStatement.accept(visitor);
-
-        List<TableStat.Condition> conditions = visitor.getConditions();
-
+        currentSqlStatement.accept(visitor);
 
         LogicDataSource logicDataSource = logicConnection.getLogicDataSource();
+
         Object fieldValueForDb = 0, fieldValueForTable = 0;
 
-        for (TableStat.Condition condition : conditions) {
-            if (condition.getColumn().getName().equals(logicDataSource.getShardingRule().getFieldNameForDb())) {
-                fieldValueForDb = condition.getValues().get(0);
+        if (currentSqlStatement instanceof MySqlInsertStatement) {
+
+            // TODO: 17/4/4
+            List<SQLExpr> columns = ((MySqlInsertStatement) currentSqlStatement).getColumns();
+            List<SQLExpr> columnValues = ((MySqlInsertStatement) currentSqlStatement).getValues().getValues();
+            for (int i = 0; i < columns.size(); i++) {
+
+                String columnName = ((SQLIdentifierExpr) columns.get(i)).getName();
+
+                if (columnName.equals(logicDataSource.getShardingRule().getFieldNameForDb())) {
+
+                    fieldValueForDb = ((SQLValuableExpr) columnValues.get(i)).getValue();
+
+                }
+
+                if (columnName.equals(logicDataSource.getShardingRule().getFieldNameForTable())) {
+
+                    fieldValueForTable = ((SQLValuableExpr) columnValues.get(i)).getValue();
+
+                }
+
             }
 
-            if (condition.getColumn().getName().equals(logicDataSource.getShardingRule().getFieldNameForTable())) {
-                fieldValueForTable = condition.getValues().get(0);
-            }
         }
 
+        if (currentSqlStatement instanceof MySqlSelectIntoStatement) {
 
 
+            List<TableStat.Condition> conditions = visitor.getConditions();
+
+
+            for (TableStat.Condition condition : conditions) {
+                if (condition.getColumn().getName().equals(logicDataSource.getShardingRule().getFieldNameForDb())) {
+                    fieldValueForDb = condition.getValues().get(0);
+                }
+
+                if (condition.getColumn().getName().equals(logicDataSource.getShardingRule().getFieldNameForTable())) {
+                    fieldValueForTable = condition.getValues().get(0);
+                }
+            }
+
+
+        }
+
+        resultSet = doExecute(sql, visitor.getCurrentTable(), logicDataSource, fieldValueForDb, fieldValueForTable);
+
+        return true;
+
+
+    }
+
+    private ResultSet doExecute(String originalSql, String logicTableName, LogicDataSource logicDataSource, Object fieldValueForDb, Object fieldValueForTable) throws SQLException {
 
         String physicalDbName = logicDataSource.getLogicDatabase() + logicDataSource.getShardingRule().getDbSuffix(fieldValueForDb);
-        String physicalTableName = visitor.getCurrentTable() + logicDataSource.getShardingRule().getTableSuffix(fieldValueForTable);
+        String physicalTableName = logicTableName + logicDataSource.getShardingRule().getTableSuffix(fieldValueForTable);
 
         DataSource physicalDataSource = logicDataSource.getPhysicalDataSourceMap().get(physicalDbName);
 
 
-        String executableSql = sql.replaceAll(visitor.getCurrentTable(), physicalTableName);
+        String executableSql = originalSql.replaceAll(logicDataSource.getLogicDatabase(), physicalDbName).replaceAll(logicTableName, physicalTableName);
 
 
         Connection physicalConnection = physicalDataSource.getConnection();
         Statement physicalStatement = physicalConnection.createStatement();
         physicalStatement.execute(executableSql);
 
-        resultSet = physicalStatement.getResultSet();
-
-        return true;
-
+        return physicalStatement.getResultSet();
 
     }
 

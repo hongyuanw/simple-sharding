@@ -32,6 +32,9 @@ public class LogicConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
+
+
+
         return null;
     }
 
