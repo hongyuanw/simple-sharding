@@ -26,15 +26,25 @@ public class LogicDataSourceTest {
 
             User user = new User(123, "yuanwhy", 18, User.Role.BUYER.getId());
 
-            testInsert(connection, user);
-            testSelect(connection, user);
-//            testUpdate(connection);
-//            testDelete(connection);
+            insertUser(connection, user);
+            User foundUser = selectUser(connection, user);
+            Assert.assertTrue(user.equals(foundUser));
+
+            user.setAge(20);
+            updateUser(connection, user);
+            foundUser = selectUser(connection, user);
+
+            Assert.assertTrue(user.equals(foundUser));
+
+            deleteUser(connection, user);
+            foundUser = selectUser(connection, user);
+            Assert.assertTrue(foundUser == null);
+
         }
 
     }
 
-    private void testInsert(Connection connection, User user) throws SQLException {
+    private void insertUser(Connection connection, User user) throws SQLException {
 
         String sql = "INSERT INTO USER(id, name, age, role) VALUES (%d, '%s', %d, %d)";
 
@@ -42,23 +52,33 @@ public class LogicDataSourceTest {
 
         try (Statement statement = connection.createStatement()) {
 
-            boolean result = statement.execute(sql);
-
-            Assert.assertTrue(result);
+            statement.execute(sql);
 
         }
     }
 
-    private void testUpdate(Connection connection) throws SQLException {
-        // TODO: 17/4/4  
+    private void updateUser(Connection connection, User user) throws SQLException {
+
+        String sql = "UPDATE USER SET age = %d , name = '%s' WHERE  id = %d and role = %d";
+
+        sql = String.format(sql, user.getAge(), user.getName(), user.getId(), user.getRole());
+
+        try (Statement statement = connection.createStatement()) {
+
+            statement.execute(sql);
+
+        }
+
+
     }
 
-    private void testSelect(Connection connection, User user) throws SQLException {
+    private User selectUser(Connection connection, User user) throws SQLException {
 
         String sql = "select id, name, age, role from user where id = %d and role = %d";
 
         sql = String.format(sql, user.getId(), user.getRole());
 
+        User foundUser = null;
         try (Statement statement = connection.createStatement()) {
 
             statement.execute(sql);
@@ -66,16 +86,31 @@ public class LogicDataSourceTest {
             ResultSet resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
-                Assert.assertEquals(user.getId(), resultSet.getInt(1));
-                Assert.assertEquals(user.getName(), resultSet.getString(2));
-                Assert.assertEquals(user.getAge(), resultSet.getString(3));
-                Assert.assertEquals(user.getRole(), resultSet.getInt(4));
+
+                foundUser = new User();
+
+                foundUser.setId(resultSet.getInt(1));
+                foundUser.setName(resultSet.getString(2));
+                foundUser.setAge(resultSet.getInt(3));
+                foundUser.setRole(resultSet.getInt(4));
             }
         }
+
+        return foundUser;
     }
 
-    private void testDelete(Connection connection) throws SQLException {
-        // TODO: 17/4/4
+    private void deleteUser(Connection connection, User user) throws SQLException {
+
+        String sql = "DELETE FROM USER WHERE  id = %d and role = %d";
+
+        sql = String.format(sql, user.getId(), user.getRole());
+
+        try (Statement statement = connection.createStatement()) {
+
+            statement.execute(sql);
+
+        }
+
     }
 
 }

@@ -7,6 +7,7 @@ import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.clause.MySqlSelectIntoStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
 import com.alibaba.druid.stat.TableStat;
 import com.alibaba.druid.util.JdbcConstants;
@@ -140,10 +141,7 @@ public class LogicStatement implements Statement {
 
             }
 
-        }
-
-        if (currentSqlStatement instanceof MySqlSelectIntoStatement) {
-
+        } else {
 
             List<TableStat.Condition> conditions = visitor.getConditions();
 
@@ -160,7 +158,6 @@ public class LogicStatement implements Statement {
 
 
         }
-
         resultSet = doExecute(sql, visitor.getCurrentTable(), logicDataSource, fieldValueForDb, fieldValueForTable);
 
         return true;
