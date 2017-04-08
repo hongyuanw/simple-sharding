@@ -162,7 +162,9 @@ public class LogicPrepareStatement implements PreparedStatement {
             if (sql.charAt(i) == QUESTION_MARK) {
 
                 if (parameters[indexOfParameter] instanceof String) {
-                    targetSql.append("'" + parameters[indexOfParameter] + "'");
+                    targetSql.append("'");
+                    targetSql.append(parameters[indexOfParameter]);
+                    targetSql.append("'");
                 } else {
                     targetSql.append(parameters[indexOfParameter]);
                 }
