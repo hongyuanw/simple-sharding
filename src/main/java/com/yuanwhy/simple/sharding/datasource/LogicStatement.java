@@ -190,6 +190,8 @@ public class LogicStatement implements Statement {
     }
 
     @Override
+
+
     public int getUpdateCount() throws SQLException {
         return 0;
     }

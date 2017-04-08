@@ -44,6 +44,37 @@ public class LogicDataSourceTest {
 
     }
 
+
+    @Test
+    public void testCreateLogicDataSourceAndPrepareStatement() throws Exception {
+
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("datasource.xml");
+
+        DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");
+
+        try (Connection connection = dataSource.getConnection()) {
+
+
+            User user = new User(123, "yuanwhy", 18, User.Role.BUYER.getId());
+
+            insertUserWithPrepareStatement(connection, user);
+            User foundUser = selectUserWithPrepareStatement(connection, user);
+            Assert.assertTrue(user.equals(foundUser));
+
+            user.setAge(20);
+            updateUserWithPrepareStatement(connection, user);
+            foundUser = selectUserWithPrepareStatement(connection, user);
+
+            Assert.assertTrue(user.equals(foundUser));
+
+            deleteUserWithPrepareStatement(connection, user);
+            foundUser = selectUserWithPrepareStatement(connection, user);
+            Assert.assertTrue(foundUser == null);
+
+        }
+
+    }
+
     private void insertUser(Connection connection, User user) throws SQLException {
 
         String sql = "INSERT INTO USER(id, name, age, role) VALUES (%d, '%s', %d, %d)";
@@ -53,6 +84,24 @@ public class LogicDataSourceTest {
         try (Statement statement = connection.createStatement()) {
 
             statement.execute(sql);
+
+        }
+    }
+
+    private void insertUserWithPrepareStatement(Connection connection, User user) throws SQLException {
+
+        String sql = "INSERT INTO USER(id, name, age, role) VALUES (?, ?, ?, ?)";
+
+        sql = String.format(sql, user.getId(), user.getName(), user.getAge(), user.getRole());
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setInt(3, user.getAge());
+            preparedStatement.setInt(4, user.getRole());
+
+            preparedStatement.execute();
 
         }
     }
@@ -67,6 +116,24 @@ public class LogicDataSourceTest {
 
             statement.execute(sql);
 
+        }
+
+
+    }
+
+    private void updateUserWithPrepareStatement(Connection connection, User user) throws SQLException {
+
+        String sql = "UPDATE USER SET age = ? , name = ? WHERE  id = ? and role = ?";
+
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, user.getAge());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setInt(3, user.getId());
+            preparedStatement.setInt(4, user.getRole());
+
+            preparedStatement.execute();
         }
 
 
@@ -87,15 +154,44 @@ public class LogicDataSourceTest {
 
             while (resultSet.next()) {
 
-                foundUser = new User();
-
-                foundUser.setId(resultSet.getInt(1));
-                foundUser.setName(resultSet.getString(2));
-                foundUser.setAge(resultSet.getInt(3));
-                foundUser.setRole(resultSet.getInt(4));
+                foundUser = getUserFromResultSet(resultSet);
             }
         }
 
+        return foundUser;
+    }
+
+    private User selectUserWithPrepareStatement(Connection connection, User user) throws SQLException {
+
+        String sql = "select id, name, age, role from user where id = ? and role = ?";
+
+        User foundUser = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, user.getRole());
+
+            preparedStatement.execute();
+
+            ResultSet resultSet = preparedStatement.getResultSet();
+
+            while (resultSet.next()) {
+
+                foundUser = getUserFromResultSet(resultSet);
+            }
+        }
+
+        return foundUser;
+    }
+
+    private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
+        User foundUser;
+        foundUser = new User();
+
+        foundUser.setId(resultSet.getInt(1));
+        foundUser.setName(resultSet.getString(2));
+        foundUser.setAge(resultSet.getInt(3));
+        foundUser.setRole(resultSet.getInt(4));
         return foundUser;
     }
 
@@ -108,6 +204,22 @@ public class LogicDataSourceTest {
         try (Statement statement = connection.createStatement()) {
 
             statement.execute(sql);
+
+        }
+
+    }
+
+    private void deleteUserWithPrepareStatement(Connection connection, User user) throws SQLException {
+
+        String sql = "DELETE FROM USER WHERE  id = ? and role = ?";
+
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, user.getRole());
+
+            preparedStatement.execute();
 
         }
 
