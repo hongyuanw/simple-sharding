@@ -152,6 +152,12 @@ public class LogicPrepareStatement implements PreparedStatement {
 
     }
 
+    /**
+     * 分库分表场景下无法真正实现预编译,因为设置参数之前是不知道落地到哪个物理库的
+     * 只能把原始带问号的SQL补上参数后获得目标SQL,然后利用Statement去执行
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean execute() throws SQLException {
 
