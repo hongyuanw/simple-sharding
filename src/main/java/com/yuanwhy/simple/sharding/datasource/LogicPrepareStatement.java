@@ -1,5 +1,8 @@
 package com.yuanwhy.simple.sharding.datasource;
 
+
+import com.yuanwhy.simple.sharding.utils.StringUtils;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -12,6 +15,28 @@ import java.util.Calendar;
  */
 public class LogicPrepareStatement implements PreparedStatement {
 
+    public static char QUESTION_MARK = '?';
+
+    private LogicConnection connection;
+
+    private String sql;
+
+    private Object[] parameters;
+
+    private ResultSet resultSet;
+
+    public LogicPrepareStatement(LogicConnection connection, String sql) {
+
+        this.connection = connection;
+        this.sql = sql;
+
+        int countOfQuestionMark = StringUtils.countOfChar(sql, QUESTION_MARK);
+        parameters = new Object[countOfQuestionMark];
+    }
+
+    public String getSql() {
+        return sql;
+    }
 
     @Override
     public ResultSet executeQuery() throws SQLException {
@@ -46,6 +71,8 @@ public class LogicPrepareStatement implements PreparedStatement {
     @Override
     public void setInt(int parameterIndex, int x) throws SQLException {
 
+        this.parameters[parameterIndex - 1] = x;
+
     }
 
     @Override
@@ -70,6 +97,8 @@ public class LogicPrepareStatement implements PreparedStatement {
 
     @Override
     public void setString(int parameterIndex, String x) throws SQLException {
+
+        this.parameters[parameterIndex - 1] = x;
 
     }
 
@@ -125,7 +154,32 @@ public class LogicPrepareStatement implements PreparedStatement {
 
     @Override
     public boolean execute() throws SQLException {
-        return false;
+
+        StringBuffer targetSql = new StringBuffer();
+
+        int indexOfParameter = 0;
+        for (int i = 0; i < sql.length(); i++) {
+            if (sql.charAt(i) == QUESTION_MARK) {
+
+                if (parameters[indexOfParameter] instanceof String) {
+                    targetSql.append("'" + parameters[indexOfParameter] + "'");
+                } else {
+                    targetSql.append(parameters[indexOfParameter]);
+                }
+
+                indexOfParameter++;
+            } else {
+                targetSql.append(sql.charAt(i));
+            }
+        }
+
+        LogicStatement logicStatement = (LogicStatement) this.getConnection().createStatement();
+
+        logicStatement.execute(targetSql.toString());
+
+        resultSet = logicStatement.getResultSet();
+
+        return true;
     }
 
     @Override
@@ -365,7 +419,7 @@ public class LogicPrepareStatement implements PreparedStatement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return null;
+        return resultSet;
     }
 
     @Override
@@ -425,7 +479,7 @@ public class LogicPrepareStatement implements PreparedStatement {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+        return connection;
     }
 
     @Override

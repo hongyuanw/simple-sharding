@@ -92,8 +92,6 @@ public class LogicDataSourceTest {
 
         String sql = "INSERT INTO USER(id, name, age, role) VALUES (?, ?, ?, ?)";
 
-        sql = String.format(sql, user.getId(), user.getName(), user.getAge(), user.getRole());
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, user.getId());
