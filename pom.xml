@@ -6,7 +6,7 @@
 
     <groupId>com.yuanwhy</groupId>
     <artifactId>simple-sharding</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
