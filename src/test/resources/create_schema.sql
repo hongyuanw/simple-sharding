@@ -1,5 +1,5 @@
-DROP database passport_0;
-DROP database passport_1;
+DROP database if exists passport_0;
+DROP database if exists passport_1;
 
 CREATE SCHEMA `passport_0`;
 CREATE TABLE `passport_0`.`user_0` (
