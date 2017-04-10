@@ -10,7 +10,13 @@ import java.util.concurrent.Executor;
  */
 public class LogicConnection implements Connection {
 
-    private LogicDataSource logicDataSource;
+    private final LogicDataSource logicDataSource;
+
+    private Connection physicalConnection;
+
+    private String physicalDbName;
+
+    private boolean autoCommit = true;
 
     public LogicConnection(LogicDataSource logicDataSource) {
         this.logicDataSource = logicDataSource;
@@ -21,6 +27,21 @@ public class LogicConnection implements Connection {
         return logicDataSource;
     }
 
+    public Connection getPhysicalConnection() {
+        return physicalConnection;
+    }
+
+    public void setPhysicalConnection(Connection physicalConnection) {
+        this.physicalConnection = physicalConnection;
+    }
+
+    public String getPhysicalDbName() {
+        return physicalDbName;
+    }
+
+    public void setPhysicalDbName(String physicalDbName) {
+        this.physicalDbName = physicalDbName;
+    }
 
     @Override
     public Statement createStatement() throws SQLException {
@@ -50,32 +71,61 @@ public class LogicConnection implements Connection {
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-
+        this.autoCommit = autoCommit;
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return false;
+        return autoCommit;
     }
 
+    /**
+     * commit之后为了能开启新的不同的分库的事务,所以清空之前的物理连接
+     * @throws SQLException
+     */
     @Override
     public void commit() throws SQLException {
 
+        physicalConnection.commit();
+
+        resetPhysicalProperties();
+
     }
 
+    /**
+     * 和commit做法保持一致
+     * @throws SQLException
+     */
     @Override
     public void rollback() throws SQLException {
 
+        physicalConnection.rollback();
+
+        resetPhysicalProperties();
+
     }
 
+    /**
+     * 关闭逻辑连接的含义: 关闭物理连接同时清空, 使得逻辑连接可以开启新的不同分库的物理连接
+     * @throws SQLException
+     */
     @Override
     public void close() throws SQLException {
+
+        if (physicalConnection != null) {
+            resetPhysicalProperties();
+        }
 
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return false;
+
+        if (physicalConnection == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -297,4 +347,13 @@ public class LogicConnection implements Connection {
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
+
+
+    private void resetPhysicalProperties() throws SQLException {
+        this.autoCommit = true;
+        this.physicalConnection.close();
+        this.physicalConnection = null;
+        this.physicalDbName = null;
+    }
+
 }

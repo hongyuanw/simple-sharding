@@ -21,26 +21,37 @@ public class LogicDataSourceTest {
 
         DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");
 
-        try (Connection connection = dataSource.getConnection()) {
+        Connection connection1 = dataSource.getConnection();
+        Connection connection2 = dataSource.getConnection();
+
+        connection1.setAutoCommit(false);
+
+        User user = new User(123, "yuanwhy", 18, User.Role.BUYER.getId());
+        insertUser(connection1, user);
+        User foundUserFromConnection1 = selectUser(connection1, user);
+        Assert.assertTrue(user.equals(foundUserFromConnection1));
+
+        User foundUserFromConnection2 = selectUser(connection2, user);
+        Assert.assertTrue(foundUserFromConnection2 == null); // 事务隔离,connection2一定读不到connection1的数据
+
+        connection1.commit();
+        User foundOneUserFromConnection2 = selectUser(connection2, user);
+        Assert.assertTrue(foundOneUserFromConnection2.equals(user)); // connection1的事务提交后,connection2可以读到持久化的数据
 
 
-            User user = new User(123, "yuanwhy", 18, User.Role.BUYER.getId());
 
-            insertUser(connection, user);
-            User foundUser = selectUser(connection, user);
-            Assert.assertTrue(user.equals(foundUser));
+        user.setAge(20);
+        updateUser(connection1, user);
+        foundUserFromConnection1 = selectUser(connection1, user);
 
-            user.setAge(20);
-            updateUser(connection, user);
-            foundUser = selectUser(connection, user);
+        Assert.assertTrue(user.equals(foundUserFromConnection1));
 
-            Assert.assertTrue(user.equals(foundUser));
+        deleteUser(connection1, user);
+        foundUserFromConnection1 = selectUser(connection1, user);
+        Assert.assertTrue(foundUserFromConnection1 == null);
+        foundUserFromConnection2 = selectUser(connection2, user);
+        Assert.assertTrue(foundUserFromConnection2 == null);  //确定真的删除成功
 
-            deleteUser(connection, user);
-            foundUser = selectUser(connection, user);
-            Assert.assertTrue(foundUser == null);
-
-        }
 
     }
 

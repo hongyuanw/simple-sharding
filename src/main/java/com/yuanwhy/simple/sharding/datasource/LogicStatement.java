@@ -113,7 +113,6 @@ public class LogicStatement implements Statement {
 
         if (currentSqlStatement instanceof MySqlInsertStatement) {
 
-            // TODO: 17/4/4
             List<SQLExpr> columns = ((MySqlInsertStatement) currentSqlStatement).getColumns();
             List<SQLExpr> columnValues = ((MySqlInsertStatement) currentSqlStatement).getValues().getValues();
             for (int i = 0; i < columns.size(); i++) {
@@ -168,8 +167,31 @@ public class LogicStatement implements Statement {
 
         String executableSql = originalSql.replaceAll(logicDataSource.getLogicDatabase(), physicalDbName).replaceAll(logicTableName, physicalTableName);
 
+        Connection physicalConnection = null;
 
-        Connection physicalConnection = physicalDataSource.getConnection();
+        if(this.logicConnection.getPhysicalConnection() != null) {
+
+            if (physicalDbName.equals(this.logicConnection.getPhysicalDbName())) {
+
+                physicalConnection = this.logicConnection.getPhysicalConnection();
+
+            } else {
+                throw new RuntimeException("不支持跨库事务 : " + originalSql);
+            }
+
+        } else {
+
+            physicalConnection = physicalDataSource.getConnection();
+
+            this.logicConnection.setPhysicalConnection(physicalConnection);
+            this.logicConnection.setPhysicalDbName(physicalDbName);
+
+            physicalConnection.setAutoCommit(this.logicConnection.getAutoCommit());
+
+        }
+
+
+
         Statement physicalStatement = physicalConnection.createStatement();
         physicalStatement.execute(executableSql);
 
