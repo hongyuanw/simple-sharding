@@ -12,18 +12,6 @@
         <property name="tableCount" value="2"/>
     </bean>
 
-    <bean id="dataSource" class="com.yuanwhy.simple.sharding.datasource.LogicDataSource">
-        <property name="logicDatabase" value="passport"/>
-        <property name="shardingRule" ref="shardingRule"/>
-        <property name="physicalDataSourceMap">
-            <map>
-                <entry key="passport_0" value-ref="physicalDataSource0"/>
-                <entry key="passport_1" value-ref="physicalDataSource1"/>
-            </map>
-        </property>
-    </bean>
-
-
     <bean id="physicalDataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
         <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_0"/>
@@ -38,5 +26,15 @@
         <property name="password" value=""/>
     </bean>
 
+    <bean id="dataSource" class="com.yuanwhy.simple.sharding.datasource.LogicDataSource">
+        <property name="logicDatabase" value="passport"/>
+        <property name="shardingRule" ref="shardingRule"/>
+        <property name="physicalDataSourceMap">
+            <map>
+                <entry key="passport_0" value-ref="physicalDataSource0"/>
+                <entry key="passport_1" value-ref="physicalDataSource1"/>
+            </map>
+        </property>
+    </bean>
 
 </beans>
