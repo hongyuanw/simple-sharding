@@ -14,14 +14,14 @@
 
     <bean id="physicalDataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_0"/>
+        <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/passport_0"/>
         <property name="user" value="root"/>
         <property name="password" value=""/>
     </bean>
 
     <bean id="physicalDataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_1"/>
+        <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/passport_1"/>
         <property name="user" value="root"/>
         <property name="password" value=""/>
     </bean>

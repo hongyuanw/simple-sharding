@@ -7,7 +7,7 @@ services:
   - mysql
 
 before_install:
-  - mysql -u root < src/test/resources/create_schema.sql
+  - mysql -h 127.0.0.1 -u root < src/test/resources/create_schema.sql
 
 script:
   - mvn clean install
