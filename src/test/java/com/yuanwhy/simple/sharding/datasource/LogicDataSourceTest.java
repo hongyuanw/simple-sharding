@@ -88,7 +88,7 @@ public class LogicDataSourceTest {
 
     private void insertUser(Connection connection, User user) throws SQLException {
 
-        String sql = "INSERT INTO USER(id, name, age, role) VALUES (%d, '%s', %d, %d)";
+        String sql = "INSERT INTO user(id, name, age, role) VALUES (%d, '%s', %d, %d)";
 
         sql = String.format(sql, user.getId(), user.getName(), user.getAge(), user.getRole());
 
@@ -101,7 +101,7 @@ public class LogicDataSourceTest {
 
     private void insertUserWithPrepareStatement(Connection connection, User user) throws SQLException {
 
-        String sql = "INSERT INTO USER(id, name, age, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO user(id, name, age, role) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -117,7 +117,7 @@ public class LogicDataSourceTest {
 
     private void updateUser(Connection connection, User user) throws SQLException {
 
-        String sql = "UPDATE USER SET age = %d , name = '%s' WHERE  id = %d and role = %d";
+        String sql = "UPDATE user SET age = %d , name = '%s' WHERE  id = %d and role = %d";
 
         sql = String.format(sql, user.getAge(), user.getName(), user.getId(), user.getRole());
 
@@ -132,7 +132,7 @@ public class LogicDataSourceTest {
 
     private void updateUserWithPrepareStatement(Connection connection, User user) throws SQLException {
 
-        String sql = "UPDATE USER SET age = ? , name = ? WHERE  id = ? and role = ?";
+        String sql = "UPDATE user SET age = ? , name = ? WHERE  id = ? and role = ?";
 
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -206,7 +206,7 @@ public class LogicDataSourceTest {
 
     private void deleteUser(Connection connection, User user) throws SQLException {
 
-        String sql = "DELETE FROM USER WHERE  id = %d and role = %d";
+        String sql = "DELETE FROM user WHERE  id = %d and role = %d";
 
         sql = String.format(sql, user.getId(), user.getRole());
 
@@ -220,7 +220,7 @@ public class LogicDataSourceTest {
 
     private void deleteUserWithPrepareStatement(Connection connection, User user) throws SQLException {
 
-        String sql = "DELETE FROM USER WHERE  id = ? and role = ?";
+        String sql = "DELETE FROM user WHERE  id = ? and role = ?";
 
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
