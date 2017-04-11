@@ -1,4 +1,9 @@
 # Simple-Sharding
+
+[![Build Status](https://travis-ci.org/yuanwhy/simple-sharding.svg?branch=master)](https://travis-ci.org/yuanwhy/simple-sharding)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
+
 一款简单易用的分库分表中间件, 基于JDBC API开发, 应用只需替换DataSource并设置相应参数即可快速获得分库分表能力
 
 ## Feature
@@ -63,6 +68,9 @@
 
    ```
 5. 使用JDBC API或者ORM框架执行SQL即可
+
+## License
+Apache License, Version 2.0
 
 
 

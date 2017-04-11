@@ -1,0 +1,13 @@
+language: java
+
+java:
+  - 1.8
+    
+services:
+  - mysql
+
+before_install:
+  - mysql -e src/test/resources/create_schema.sql
+
+script:
+  - mvn clean install
