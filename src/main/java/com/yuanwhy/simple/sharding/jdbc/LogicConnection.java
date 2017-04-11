@@ -1,4 +1,4 @@
-package com.yuanwhy.simple.sharding.datasource;
+package com.yuanwhy.simple.sharding.jdbc;
 
 import java.sql.*;
 import java.util.Map;

@@ -6,7 +6,7 @@
 
 一款简单易用的分库分表中间件, 基于JDBC API开发, 应用只需替换DataSource并设置相应参数即可快速获得分库分表能力
 
-## Feature
+## Features
  * 支持单库事务
  * 分库分表
  * 支持重写规则
@@ -53,7 +53,7 @@
       <property name="password" value=""/>
    </bean>
 
-   <bean id="dataSource" class="com.yuanwhy.simple.sharding.datasource.LogicDataSource">
+   <bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
       <property name="logicDatabase" value="passport"/>
       <property name="shardingRule" ref="shardingRule"/>
       <property name="physicalDataSourceMap">

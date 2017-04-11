@@ -26,7 +26,7 @@
         <property name="password" value=""/>
     </bean>
 
-    <bean id="dataSource" class="com.yuanwhy.simple.sharding.datasource.LogicDataSource">
+    <bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
         <property name="logicDatabase" value="passport"/>
         <property name="shardingRule" ref="shardingRule"/>
         <property name="physicalDataSourceMap">
