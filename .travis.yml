@@ -1,13 +1,13 @@
 language: java
 
-java:
-  - 1.8
+jdk:
+  - oraclejdk8
     
 services:
   - mysql
 
 before_install:
-  - mysql -u root < create_schema.sql
+  - mysql -u root < src/test/resources/create_schema.sql
 
 script:
   - mvn clean install
