@@ -13,7 +13,7 @@ import java.util.Calendar;
 /**
  * Created by yuanwhy on 17/4/3.
  */
-public class LogicPrepareStatement implements PreparedStatement {
+public class LogicPreparedStatement implements PreparedStatement {
 
     public static char QUESTION_MARK = '?';
 
@@ -25,7 +25,7 @@ public class LogicPrepareStatement implements PreparedStatement {
 
     private ResultSet resultSet;
 
-    public LogicPrepareStatement(LogicConnection connection, String sql) {
+    public LogicPreparedStatement(LogicConnection connection, String sql) {
 
         this.connection = connection;
         this.sql = sql;

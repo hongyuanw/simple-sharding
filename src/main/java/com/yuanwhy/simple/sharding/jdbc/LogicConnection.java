@@ -54,7 +54,7 @@ public class LogicConnection implements Connection {
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
 
-        LogicPrepareStatement prepareStatement = new LogicPrepareStatement(this, sql);
+        LogicPreparedStatement prepareStatement = new LogicPreparedStatement(this, sql);
 
         return prepareStatement;
     }
