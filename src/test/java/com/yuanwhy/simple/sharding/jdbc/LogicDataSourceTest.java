@@ -14,6 +14,10 @@ import java.sql.*;
 public class LogicDataSourceTest {
 
 
+    /**
+     * 测试Statement下的CURD和单库事务
+     * @throws Exception
+     */
     @Test
     public void testCreateLogicDataSourceAndStatement() throws Exception {
 
@@ -56,6 +60,10 @@ public class LogicDataSourceTest {
     }
 
 
+    /**
+     * 测试PrepareStatement下的CRUD
+     * @throws Exception
+     */
     @Test
     public void testCreateLogicDataSourceAndPrepareStatement() throws Exception {
 
