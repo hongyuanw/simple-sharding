@@ -69,6 +69,9 @@
    ```
 5. 使用JDBC API或者ORM框架执行SQL即可
 
+## Document
+[Simple-Sharding : 一款极简的分库分表中间件](http://www.jianshu.com/p/9784a3d4c7a8)
+
 ## License
 Apache License, Version 2.0
 
