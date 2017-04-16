@@ -72,6 +72,8 @@
 ## Document
 [Simple-Sharding : 一款极简的分库分表中间件](http://www.jianshu.com/p/9784a3d4c7a8)
 
+[分库分表相关](http://yuanwhy.com/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/)
+
 ## License
 Apache License, Version 2.0
 
