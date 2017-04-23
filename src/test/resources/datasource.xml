@@ -26,6 +26,13 @@
         <property name="password" value=""/>
     </bean>
 
+    <bean id="physicalDataSourceExt" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/ext"/>
+        <property name="user" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
     <bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
         <property name="logicDatabase" value="passport"/>
         <property name="shardingRule" ref="shardingRule"/>
@@ -33,6 +40,7 @@
             <map>
                 <entry key="passport_0" value-ref="physicalDataSource0"/>
                 <entry key="passport_1" value-ref="physicalDataSource1"/>
+                <entry key="ext" value-ref="physicalDataSourceExt"/>
             </map>
         </property>
     </bean>
