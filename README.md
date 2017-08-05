@@ -4,19 +4,28 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 
-一款简单易用的分库分表中间件, 基于JDBC API开发, 应用只需替换DataSource并设置相应参数即可快速获得分库分表能力
+A simple database shard middleware, based on JDBC API. Applications can scale database by using new DataSource with simple-sharding. This project is not finished, and feel free to study.
+
 
 ## Features
- * 支持单库事务
- * 分库分表
- * 支持重写规则
+ * Transaction in single database shard
+ * Sharding
+ * Rewriting rules
 
 ## Quick Start
 
-1. `git clone https://github.com/yuanwhy/simple-sharding.git`
-   下载代码后执行test/create_schema.sql脚本建立测试库
-2. 执行`mvn clean install` 编译并安装到本地仓库
-3. 引用maven依赖
+1. Get source code,
+```
+git clone https://github.com/yuanwhy/simple-sharding.git
+```
+   Then execute `test/create_schema.sql` to init data.
+
+2. Install simple-sharding to you local repository by
+```
+mvn clean install
+```
+
+3. Add artifact dependency
    ```xml
    <dependency>
       <groupId>com.yuanwhy</groupId>
@@ -24,7 +33,7 @@
       <version>0.0.1-SNAPSHOT</version>
    </dependency>
    ```
-4. 设置DataSource以及物理连接池(以test/datasource.xml为例,逻辑数据源为dataSource, 逻辑库为passport, 有两个物理分库passport_0、passport_1, 分库分表规则是HashShardingRule, 即通过分库分表字段hash到具体的物理节点, 分库字段为role, 分表字段为id)
+4. Set logic datasource and physic datasources
    ```xml
    <beans xmlns="http://www.springframework.org/schema/beans"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -67,16 +76,17 @@
    </beans>
 
    ```
-5. 使用JDBC API或者ORM框架执行SQL即可
+   
+5. Feel free to use JDBC API or ORM framework (e.g. MyBatis ) to execute your SQL
 
 ## Document
-[Simple-Sharding : 一款极简的分库分表中间件](http://www.jianshu.com/p/9784a3d4c7a8)
+[Simple-Sharding 中文](http://www.jianshu.com/p/9784a3d4c7a8)
 
-[分库分表相关](http://yuanwhy.com/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/)
+[References](http://yuanwhy.com/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/)
+
+## Todo
+  - [ ] Support Spring custom namespace
+  - [ ] Finish other methods
 
 ## License
 Apache License, Version 2.0
-
-
-
-
