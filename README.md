@@ -1,5 +1,7 @@
 # Simple-Sharding
 
+[![Join the chat at https://gitter.im/yuanwhy/simple-sharding](https://badges.gitter.im/yuanwhy/simple-sharding.svg)](https://gitter.im/yuanwhy/simple-sharding?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/yuanwhy/simple-sharding.svg?branch=master)](https://travis-ci.org/yuanwhy/simple-sharding)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
