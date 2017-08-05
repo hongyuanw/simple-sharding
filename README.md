@@ -14,70 +14,74 @@ A simple database shard middleware, based on JDBC API. Applications can scale da
 
 ## Quick Start
 
-1. Get source code,
+#### 1. Get source code
+
 ```
 git clone https://github.com/yuanwhy/simple-sharding.git
 ```
-   Then execute `test/create_schema.sql` to init data.
+and then execute `test/create_schema.sql` to init data.
 
-2. Install simple-sharding to you local repository by
+#### 2. Install simple-sharding to you local repository by
+
 ```
 mvn clean install
 ```
 
-3. Add artifact dependency
-   ```xml
-   <dependency>
-      <groupId>com.yuanwhy</groupId>
-      <artifactId>simple-sharding</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-   </dependency>
-   ```
-4. Set logic datasource and physic datasources
-   ```xml
-   <beans xmlns="http://www.springframework.org/schema/beans"
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="
-      http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd">
+#### 3. Add artifact dependency
 
-   <bean id="shardingRule" class="com.yuanwhy.simple.sharding.rule.HashShardingRule">
-      <property name="fieldNameForDb" value="role"/>
-      <property name="fieldNameForTable" value="id"/>
-      <property name="dbCount" value="2"/>
-      <property name="tableCount" value="2"/>
-   </bean>
+```xml
+<dependency>
+  <groupId>com.yuanwhy</groupId>
+  <artifactId>simple-sharding</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+####  4. Set logic datasource and physic datasources
 
-   <bean id="physicalDataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-      <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-      <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_0"/>
-      <property name="user" value="root"/>
-      <property name="password" value=""/>
-   </bean>
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="
+  http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-   <bean id="physicalDataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-      <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-      <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_1"/>
-      <property name="user" value="root"/>
-      <property name="password" value=""/>
-   </bean>
+<bean id="shardingRule" class="com.yuanwhy.simple.sharding.rule.HashShardingRule">
+  <property name="fieldNameForDb" value="role"/>
+  <property name="fieldNameForTable" value="id"/>
+  <property name="dbCount" value="2"/>
+  <property name="tableCount" value="2"/>
+</bean>
 
-   <bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
-      <property name="logicDatabase" value="passport"/>
-      <property name="shardingRule" ref="shardingRule"/>
-      <property name="physicalDataSourceMap">
-          <map>
-              <entry key="passport_0" value-ref="physicalDataSource0"/>
-              <entry key="passport_1" value-ref="physicalDataSource1"/>
-          </map>
-      </property>
-   </bean>
+<bean id="physicalDataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+  <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+  <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_0"/>
+  <property name="user" value="root"/>
+  <property name="password" value=""/>
+</bean>
 
-   </beans>
+<bean id="physicalDataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+  <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+  <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_1"/>
+  <property name="user" value="root"/>
+  <property name="password" value=""/>
+</bean>
 
-   ```
+<bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
+  <property name="logicDatabase" value="passport"/>
+  <property name="shardingRule" ref="shardingRule"/>
+  <property name="physicalDataSourceMap">
+      <map>
+          <entry key="passport_0" value-ref="physicalDataSource0"/>
+          <entry key="passport_1" value-ref="physicalDataSource1"/>
+      </map>
+  </property>
+</bean>
+
+</beans>
+
+```
    
-5. Feel free to use JDBC API or ORM framework (e.g. MyBatis ) to execute your SQL
+#### 5. Feel free to use JDBC API or ORM framework (e.g. MyBatis ) to execute your SQL
 
 ## Document
 [Simple-Sharding 中文](http://www.jianshu.com/p/9784a3d4c7a8)
