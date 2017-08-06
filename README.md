@@ -75,6 +75,7 @@ mvn clean install
 ## Todo
   - [x] Support Spring custom namespace
   - [ ] Finish other methods
+  - [ ] Support multiple tables in one datasource
 
 ## License
 Apache License, Version 2.0
