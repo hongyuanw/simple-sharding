@@ -41,11 +41,12 @@ mvn clean install
 ####  4. Set logic datasource and physic datasources
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="
-  http://www.springframework.org/schema/beans
-  http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:simple-sharding="http://yuanwhy.com/schema/simple-sharding"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://yuanwhy.com/schema/simple-sharding http://yuanwhy.com/schema/simple-sharding.xsd">
 
     <simple-sharding:hashShardingRule id="hashShardingRule" dbCount="2" tableCount="2" fieldNameForDb="role"
                                       fieldNameForTable="id"/>
@@ -58,6 +59,7 @@ mvn clean install
         <simple-sharding:physicalDataSource name="passport_1" jdbcUrl="jdbc:mysql://127.0.0.1:3306/passport_0"
                                             user="root" password=""/>
     </simple-sharding:logicDataSource>
+
 
 </beans>
 
