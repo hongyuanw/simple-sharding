@@ -45,42 +45,22 @@ mvn clean install
   http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<bean id="shardingRule" class="com.yuanwhy.simple.sharding.rule.HashShardingRule">
-  <property name="fieldNameForDb" value="role"/>
-  <property name="fieldNameForTable" value="id"/>
-  <property name="dbCount" value="2"/>
-  <property name="tableCount" value="2"/>
-</bean>
+    <simple-sharding:hashShardingRule id="hashShardingRule" dbCount="2" tableCount="2" fieldNameForDb="role"
+                                      fieldNameForTable="id"/>
 
-<bean id="physicalDataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-  <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-  <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_0"/>
-  <property name="user" value="root"/>
-  <property name="password" value=""/>
-</bean>
-
-<bean id="physicalDataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-  <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-  <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/passport_1"/>
-  <property name="user" value="root"/>
-  <property name="password" value=""/>
-</bean>
-
-<bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
-  <property name="name" value="passport"/>
-  <property name="shardingRule" ref="shardingRule"/>
-  <property name="physicalDataSourceMap">
-      <map>
-          <entry key="passport_0" value-ref="physicalDataSource0"/>
-          <entry key="passport_1" value-ref="physicalDataSource1"/>
-      </map>
-  </property>
-</bean>
+    <simple-sharding:logicDataSource id="dataSource"
+                                     name="passport"
+                                     shardingRule="hashShardingRule">
+        <simple-sharding:physicalDataSource name="passport_0" jdbcUrl="jdbc:mysql://127.0.0.1:3306/passport_0"
+                                            user="root" password=""/>
+        <simple-sharding:physicalDataSource name="passport_1" jdbcUrl="jdbc:mysql://127.0.0.1:3306/passport_0"
+                                            user="root" password=""/>
+    </simple-sharding:logicDataSource>
 
 </beans>
 
 ```
-   
+
 #### 5. Feel free to use JDBC API or ORM framework (e.g. MyBatis ) to execute your SQL
 
 ## Document
@@ -89,7 +69,7 @@ mvn clean install
 [References](http://yuanwhy.com/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/)
 
 ## Todo
-  - [ ] Support Spring custom namespace
+  - [x] Support Spring custom namespace
   - [ ] Finish other methods
 
 ## License
