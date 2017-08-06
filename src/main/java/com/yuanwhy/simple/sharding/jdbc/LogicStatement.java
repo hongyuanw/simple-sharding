@@ -159,13 +159,13 @@ public class LogicStatement implements Statement {
 
     private ResultSet doExecute(String originalSql, String logicTableName, LogicDataSource logicDataSource, Object fieldValueForDb, Object fieldValueForTable) throws SQLException {
 
-        String physicalDbName = logicDataSource.getLogicDatabase() + logicDataSource.getShardingRule().getDbSuffix(fieldValueForDb);
+        String physicalDbName = logicDataSource.getName() + logicDataSource.getShardingRule().getDbSuffix(fieldValueForDb);
         String physicalTableName = logicTableName + logicDataSource.getShardingRule().getTableSuffix(fieldValueForTable);
 
         DataSource physicalDataSource = logicDataSource.getPhysicalDataSourceMap().get(physicalDbName);
 
 
-        String executableSql = originalSql.replaceAll(logicDataSource.getLogicDatabase(), physicalDbName).replaceAll(logicTableName, physicalTableName);
+        String executableSql = originalSql.replaceAll(logicDataSource.getName(), physicalDbName).replaceAll(logicTableName, physicalTableName);
 
         Connection physicalConnection = null;
 

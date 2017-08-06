@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://yuanwhy.com/schema/simple-sharding"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            targetNamespace="http://yuanwhy.com/schema/simple-sharding"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+
+
+    <xsd:complexType name="shardingRule">
+        <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+                <xsd:attribute name="fieldNameForDb" type="xsd:string" use="required"/>
+                <xsd:attribute name="fieldNameForTable" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+
+
+    <xsd:element name="hashShardingRule">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="shardingRule">
+                    <xsd:attribute name="dbCount" type="xsd:int" use="required"/>
+                    <xsd:attribute name="tableCount" type="xsd:int" use="required"/>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <xsd:element name="logicDataSource">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                    <xsd:choice maxOccurs="unbounded">
+                        <xsd:element name="physicalDataSource">
+                            <xsd:complexType>
+                                <xsd:complexContent>
+                                    <xsd:extension base="beans:identifiedType">
+                                        <xsd:attribute name="name" type="xsd:string" use="required"/>
+                                        <xsd:attribute name="jdbcUrl" type="xsd:string" use="required"/>
+                                        <xsd:attribute name="user" type="xsd:string" use="required"/>
+                                        <xsd:attribute name="password" type="xsd:string" use="required"/>
+                                    </xsd:extension>
+                                </xsd:complexContent>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:choice>
+                    <xsd:attribute name="name" type="xsd:string" use="required"/>
+                    <xsd:attribute name="shardingRule" type="xsd:string" use="required"/>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+
+</xsd:schema>

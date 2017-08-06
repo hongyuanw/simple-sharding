@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -15,18 +16,18 @@ import java.util.logging.Logger;
  */
 public class LogicDataSource implements DataSource {
 
-    private String logicDatabase;
+    private String name;
 
     private Map<String, DataSource> physicalDataSourceMap;
 
     private ShardingRule shardingRule;
 
-    public String getLogicDatabase() {
-        return logicDatabase;
+    public String getName() {
+        return name;
     }
 
-    public void setLogicDatabase(String logicDatabase) {
-        this.logicDatabase = logicDatabase;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Map<String, DataSource> getPhysicalDataSourceMap() {

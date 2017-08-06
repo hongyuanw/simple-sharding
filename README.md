@@ -67,7 +67,7 @@ mvn clean install
 </bean>
 
 <bean id="dataSource" class="com.yuanwhy.simple.sharding.jdbc.LogicDataSource">
-  <property name="logicDatabase" value="passport"/>
+  <property name="name" value="passport"/>
   <property name="shardingRule" ref="shardingRule"/>
   <property name="physicalDataSourceMap">
       <map>

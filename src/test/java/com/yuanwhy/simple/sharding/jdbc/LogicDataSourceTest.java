@@ -4,7 +4,11 @@ import com.yuanwhy.simple.sharding.dao.CrudUtil;
 import com.yuanwhy.simple.sharding.entity.User;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,8 +16,14 @@ import java.sql.*;
 /**
  * Created by yuanwhy on 17/3/27.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath:datasource.xml"
+})
 public class LogicDataSourceTest {
 
+    @Autowired
+    private DataSource dataSource;
 
     /**
      * 测试Statement下的CURD和单库事务
@@ -21,10 +31,6 @@ public class LogicDataSourceTest {
      */
     @Test
     public void testCreateLogicDataSourceAndStatement() throws Exception {
-
-        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("datasource.xml");
-
-        DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");
 
         Connection connection1 = dataSource.getConnection();
         Connection connection2 = dataSource.getConnection();
@@ -68,9 +74,6 @@ public class LogicDataSourceTest {
     @Test
     public void testCreateLogicDataSourceAndPrepareStatement() throws Exception {
 
-        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("datasource.xml");
-
-        DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");
 
         try (Connection connection = dataSource.getConnection()) {
 
